@@ -5,14 +5,8 @@
 
 int main()
 {
-    MerkelMain app = MerkelMain();
-
-    while (true)
-    {
-        app.printMenu();
-        int userOption = app.getUserOption();
-        app.processUserOption(userOption);
-    }
-
+    MerkelMain app{};
+    app.init();
+    
     return 0;
 }

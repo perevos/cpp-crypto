@@ -1,32 +1,32 @@
 #include "MerkelMain.h"
 #include <iostream>
 
-void printHelp()
+void MerkelMain::printHelp()
 {
     std::cout << "Help - your aim is to make money. Analyze the market and make bids and offers." << std::endl;
 }
 
-void printExchangeStats()
+void MerkelMain::printMarketStats()
 {
     std::cout << "Market looks good" << std::endl;
 }
 
-void enterOffer()
+void MerkelMain::enterOffer()
 {
     std::cout << "Mark and offer - enter the amount" << std::endl;
 }
 
-void enterBid()
+void MerkelMain::enterBid()
 {
     std::cout << "Make a bid - enter the amount" << std::endl;
 }
 
-void printWallet()
+void MerkelMain::printWallet()
 {
     std::cout << "Your wallet is empty." << std::endl;
 }
 
-void goToNextTimeFrame()
+void MerkelMain::gotoNextTimeFrame()
 {
     std::cout << "Going to next time frame." << std::endl;
 }
@@ -37,7 +37,16 @@ void handleInvalidOption()
 }
 
 MerkelMain::MerkelMain() {
-    
+
+}
+
+void MerkelMain::init() {
+    int input;
+    while (true) {
+        printMenu();
+        input = getUserOption();
+        processUserOption(input);
+    }
 }
 
 void MerkelMain::printMenu() {
@@ -68,7 +77,7 @@ void MerkelMain::processUserOption(int userOption)
         printHelp();
         break;
     case 2:
-        printExchangeStats();
+        printMarketStats();
         break;
     case 3:
         enterOffer();
@@ -80,7 +89,7 @@ void MerkelMain::processUserOption(int userOption)
         printWallet();
         break;
     case 6:
-        goToNextTimeFrame();
+        gotoNextTimeFrame();
         break;
     default:
         handleInvalidOption();
