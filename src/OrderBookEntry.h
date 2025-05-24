@@ -1,5 +1,4 @@
-#ifndef ORDERBOOKENTRY_H
-#define ORDERBOOKENTRY_H
+#pragma once
 
 #include <string>
 #include "OrderBookType.h"
@@ -14,5 +13,3 @@ class OrderBookEntry
         std::string product;
         OrderBookType orderType;
 };
-
-#endif

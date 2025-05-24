@@ -1,6 +1,3 @@
-#ifndef ORDERBOOKTYPE_H
-#define ORDERBOOKTYPE_H
+#pragma once
 
 enum class OrderBookType{bid, ask};
-
-#endif
