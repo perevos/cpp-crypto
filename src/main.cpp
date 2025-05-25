@@ -7,9 +7,8 @@ using namespace std;
 int main()
 {
 
-    // MerkelMain app{};
-    // app.init();
-    CSVReader::readCSV("../data/order-book.csv");
-    
+    MerkelMain app{};
+    app.init();
+
 
 }
