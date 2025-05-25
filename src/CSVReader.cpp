@@ -90,7 +90,7 @@ OrderBookEntry CSVReader::stringsToOBE(std::vector<std::string> tokens)
     double amount;
     try
     {
-        price = std::stod(tokens[4]);
+        amount = std::stod(tokens[4]);
     }
     catch (const std::exception &e)
     {
