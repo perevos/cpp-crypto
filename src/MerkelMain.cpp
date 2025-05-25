@@ -43,7 +43,11 @@ MerkelMain::MerkelMain() {
 }
 
 void MerkelMain::init() {
+
     loadOrderBook();
+    for (OrderBookEntry& order : orders) {
+        std::cout << "The price is " << order.price << std::endl;
+    }
     int input;
     while (true) {
         printMenu();
