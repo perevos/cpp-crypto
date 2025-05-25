@@ -1,7 +1,5 @@
 #include "MerkelMain.h"
-#include "OrderBookEntry.h"
 #include <iostream>
-#include <vector>
 
 void MerkelMain::printHelp()
 {
