@@ -15,7 +15,12 @@ public:
     std::vector<std::string> getKnownProducts();
     /** return vector of Orders according to the sent filters */
     std::vector<OrderBookEntry> getOrders(OrderBookType type, std::string product, std::string timestamp);
+    /** return the earliest time in the orderbook */
     std::string getEarliestTime();
+    /** return the next time after the sent time in the orderbook;
+     *  if there is not next timestamp, wrap around to the start;
+     */
+    std::string getNextTime(std::string timestamp);
 
     /** return the price of the highest bid in the sent set */
     static double getHighPrice(std::vector<OrderBookEntry>& orders);

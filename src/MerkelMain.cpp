@@ -110,6 +110,7 @@ void MerkelMain::printWallet()
 void MerkelMain::gotoNextTimeFrame()
 {
     std::cout << "Going to next time frame." << std::endl;
+    currentTime = orderBook.getNextTime(currentTime);
 }
 
 void MerkelMain::handleInvalidOption()
