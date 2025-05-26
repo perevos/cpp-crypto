@@ -1,4 +1,5 @@
 #include <map>
+#include <algorithm>
 
 #include "OrderBook.h"
 #include "CSVReader.h"
@@ -6,6 +7,9 @@
 OrderBook::OrderBook(std::string filename)
 {
     orders = CSVReader::readCSV(filename);
+    std::sort(orders.begin(), orders.end(), [](const OrderBookEntry& e1, const OrderBookEntry& e2) {
+        return e1.timestamp < e2.timestamp;
+    });
 }
 
 std::vector<std::string> OrderBook::getKnownProducts()
@@ -80,13 +84,11 @@ double OrderBook::getLowPrice(std::vector<OrderBookEntry> &orders)
 
 std::string OrderBook::getEarliestTime()
 {
-    // We assume that the orders are sorted by the timestamp
     return orders[0].timestamp;
 }
 
 std::string OrderBook::getNextTime(std::string timestamp)
 {
-    // We assume that the orders are sorted by the timestamp
     std::string next_timestamp = "";
     for (OrderBookEntry &e : orders)
     {

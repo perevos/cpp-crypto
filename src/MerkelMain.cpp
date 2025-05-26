@@ -3,21 +3,24 @@
 #include "MerkelMain.h"
 #include "CSVReader.h"
 
-MerkelMain::MerkelMain() {
-
+MerkelMain::MerkelMain()
+{
 }
 
-void MerkelMain::init() {
+void MerkelMain::init()
+{
     int input;
     currentTime = orderBook.getEarliestTime();
-    while (true) {
+    while (true)
+    {
         printMenu();
         input = getUserOption();
         processUserOption(input);
     }
 }
 
-void MerkelMain::printMenu() {
+void MerkelMain::printMenu()
+{
     std::cout << "1: Print help" << std::endl;
     std::cout << "2: Print exchange stats" << std::endl;
     std::cout << "3: Make an offer" << std::endl;
@@ -28,7 +31,8 @@ void MerkelMain::printMenu() {
     std::cout << "Current time is: " << currentTime << std::endl;
 }
 
-int MerkelMain::getUserOption() {
+int MerkelMain::getUserOption()
+{
     std::cout << "Type in 1-6" << std::endl;
 
     int userOption;
@@ -74,21 +78,31 @@ void MerkelMain::printHelp()
 
 void MerkelMain::printMarketStats()
 {
-    const std::string timestamp{"2020/03/17 17:01:24.884492"};
-    for (std::string const p : orderBook.getKnownProducts()) {
+    for (std::string const p : orderBook.getKnownProducts())
+    {
         std::cout << "Product: " << p << std::endl;
-        std::vector<OrderBookEntry> bidEntries = orderBook.getOrders(OrderBookType::bid, p, timestamp);
-        double lowBid = OrderBook::getLowPrice(bidEntries);
-        double highBid = OrderBook::getHighPrice(bidEntries);
-        std::cout << "Bids seen (" << bidEntries.size() << "): " << lowBid << " -- " << highBid << std::endl;
+        std::vector<OrderBookEntry> bidEntries = orderBook.getOrders(OrderBookType::bid, p, currentTime);
+        double lowBid, highBid, lowAsk, highAsk;
+        if (!bidEntries.empty())
+        {
+            lowBid = OrderBook::getLowPrice(bidEntries);
+            highBid = OrderBook::getHighPrice(bidEntries);
+            std::cout << "Bids seen (" << bidEntries.size() << "): " << lowBid << " -- " << highBid << std::endl;
+        }
 
-        std::vector<OrderBookEntry> askEntries = orderBook.getOrders(OrderBookType::ask, p, timestamp);
-        double lowAsk = OrderBook::getLowPrice(askEntries);
-        double highAsk = OrderBook::getHighPrice(askEntries);
-        std::cout << "Asks seen (" << askEntries.size() << "): " << lowAsk << " -- " << highAsk << std::endl;
+        std::vector<OrderBookEntry> askEntries = orderBook.getOrders(OrderBookType::ask, p, currentTime);
+        if (!askEntries.empty())
+        {
+            lowAsk = OrderBook::getLowPrice(askEntries);
+            highAsk = OrderBook::getHighPrice(askEntries);
+            std::cout << "Asks seen (" << askEntries.size() << "): " << lowAsk << " -- " << highAsk << std::endl;
+        }
 
-        double bidAskSpread = lowAsk - highBid;
-        std::cout << "Bid-ask spread: " << bidAskSpread << std::endl;
+        if (!bidEntries.empty() && !askEntries.empty())
+        {
+            double bidAskSpread = lowAsk - highBid;
+            std::cout << "Bid-ask spread: " << bidAskSpread << std::endl;
+        }
     }
 }
 
