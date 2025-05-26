@@ -10,12 +10,21 @@ void MerkelMain::printHelp()
 
 void MerkelMain::printMarketStats()
 {
+    const std::string timestamp{"2020/03/17 17:01:24.884492"};
     for (std::string const p : orderBook.getKnownProducts()) {
         std::cout << "Product: " << p << std::endl;
-        std::vector<OrderBookEntry> entries = orderBook.getOrders(OrderBookType::ask, p, "2020/03/17 17:01:24.884492");
-        std::cout << "Asks seen: " << entries.size() << std::endl;
-        std::cout << "Max ask: " << OrderBook::getHighPrice(entries) << std::endl;
-        std::cout << "Min ask: " << OrderBook::getLowPrice(entries) << std::endl;
+        std::vector<OrderBookEntry> bidEntries = orderBook.getOrders(OrderBookType::bid, p, timestamp);
+        double lowBid = OrderBook::getLowPrice(bidEntries);
+        double highBid = OrderBook::getHighPrice(bidEntries);
+        std::cout << "Bids seen (" << bidEntries.size() << "): " << lowBid << " -- " << highBid << std::endl;
+
+        std::vector<OrderBookEntry> askEntries = orderBook.getOrders(OrderBookType::ask, p, timestamp);
+        double lowAsk = OrderBook::getLowPrice(askEntries);
+        double highAsk = OrderBook::getHighPrice(askEntries);
+        std::cout << "Asks seen (" << askEntries.size() << "): " << lowAsk << " -- " << highAsk << std::endl;
+
+        double bidAskSpread = lowAsk - highBid;
+        std::cout << "Bid-ask spread: " << bidAskSpread << std::endl;
     }
 }
 
