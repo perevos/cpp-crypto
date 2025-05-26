@@ -21,6 +21,9 @@ class MerkelMain
         void enterBid();
         void printWallet();
         void gotoNextTimeFrame();
+        void handleInvalidOption();
+
+        std::string currentTime;
 
         OrderBook orderBook{"../data/order-book.csv"};
 };

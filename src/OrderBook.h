@@ -15,6 +15,8 @@ public:
     std::vector<std::string> getKnownProducts();
     /** return vector of Orders according to the sent filters */
     std::vector<OrderBookEntry> getOrders(OrderBookType type, std::string product, std::string timestamp);
+    std::string getEarliestTime();
+
     /** return the price of the highest bid in the sent set */
     static double getHighPrice(std::vector<OrderBookEntry>& orders);
     /** return the price of the lowest bid in the sent set */
