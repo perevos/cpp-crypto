@@ -6,6 +6,7 @@ enum class OrderBookType
 {
     bid,
     ask,
+    sale,
     unknown
 };
 

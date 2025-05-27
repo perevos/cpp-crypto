@@ -23,6 +23,7 @@ public:
     std::string getNextTime(std::string timestamp);
 
     void insertOrder(OrderBookEntry& order);
+    std::vector<OrderBookEntry> matchAsksAndBids(std::string product, std::string timestamp);
 
     /** return the price of the highest bid in the sent set */
     static double getHighPrice(std::vector<OrderBookEntry>& orders);

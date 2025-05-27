@@ -65,6 +65,8 @@
         "fstream": "cpp",
         "stack": "cpp",
         "__tree": "cpp",
-        "map": "cpp"
+        "map": "cpp",
+        "__verbose_abort": "cpp",
+        "bit": "cpp"
     }
 }

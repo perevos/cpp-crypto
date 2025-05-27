@@ -105,28 +105,78 @@ std::string OrderBook::getNextTime(std::string timestamp)
 
 /**
  * Calculates the total volume of bids within a specified percentage deviation from the highest bid price.
- * 
+ *
  * Args:
  *     - orders: a vector of OrderBookEntry objects representing the current bid orders.
  *     - maxDeviationPercentage: the maximum allowed percentage deviation from the best bid (e.g., 0.001 for 0.1%). Orders outside this range are excluded.
- * 
+ *
  * Returns:
  *     the cumulative volume (sum of 'amount' for relevant bids) within the specified price range.
  */
-double OrderBook::getBidVolumeByPriceDeviation(std::vector<OrderBookEntry>& orders, double maxDeviationPercentage) {
+double OrderBook::getBidVolumeByPriceDeviation(std::vector<OrderBookEntry> &orders, double maxDeviationPercentage)
+{
     double bestBidPrice = getHighPrice(orders);
     double lowerBound = bestBidPrice * (1 - maxDeviationPercentage);
     double volume = 0;
-    for (OrderBookEntry& e : orders) {
-        if (e.price >= lowerBound) {
+    for (OrderBookEntry &e : orders)
+    {
+        if (e.price >= lowerBound)
+        {
             volume += e.amount;
         }
     }
     return volume;
 }
 
-void OrderBook::insertOrder(OrderBookEntry& order)
+void OrderBook::insertOrder(OrderBookEntry &order)
 {
     orders.push_back(order);
     std::sort(orders.begin(), orders.end(), OrderBookEntry::compareByTimestamp);
+}
+
+std::vector<OrderBookEntry> OrderBook::matchAsksAndBids(std::string product, std::string timestamp)
+{
+    std::vector<OrderBookEntry> asks = getOrders(OrderBookType::ask, product, timestamp);
+    std::sort(asks.begin(), asks.end(), OrderBookEntry::compareByPriceAsc);
+
+    std::vector<OrderBookEntry> bids = getOrders(OrderBookType::bid, product, timestamp);
+    std::sort(bids.begin(), bids.end(), OrderBookEntry::compareByPriceDesc);
+
+    std::vector<OrderBookEntry> sales;
+
+    for (OrderBookEntry &ask : asks)
+    {
+        for (OrderBookEntry &bid : bids)
+        {
+            if (bid.price >= ask.price)
+            {
+                OrderBookEntry sale{ask.price, 0, timestamp, product, OrderBookType::sale};
+                if (bid.amount == ask.amount)
+                {
+                    sale.amount = ask.amount;
+                    sales.push_back(sale);
+                    ask.amount = 0;
+                    bid.amount = 0;
+                    break;
+                }
+                if (bid.amount > ask.amount)
+                {
+                    sale.amount = ask.amount;
+                    sales.push_back(sale);
+                    ask.amount = 0;
+                    bid.amount -= sale.amount;
+                    break;
+                }
+                if (bid.amount < ask.amount)
+                {
+                    sale.amount = bid.amount;
+                    sales.push_back(sale);
+                    ask.amount -= sale.amount;
+                    bid.amount = 0;
+                    continue;
+                }
+            }
+        }
+    }
+    return sales;
 }
