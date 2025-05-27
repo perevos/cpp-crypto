@@ -28,7 +28,8 @@ std::vector<OrderBookEntry> CSVReader::readCSV(std::string csvFilename)
             OrderBookEntry obe = stringsToOBE(tokenise(line, ','));
             entries.push_back(obe);
         }
-        catch(const std::exception& e) {
+        catch (const std::exception &e)
+        {
             std::cerr << "CSVReader::readCSV corrupted csv line: " << line << std::endl;
         }
     }
@@ -83,7 +84,7 @@ OrderBookEntry CSVReader::stringsToOBE(std::vector<std::string> tokens)
     }
     catch (const std::exception &e)
     {
-        std::cerr << "Malformed price! " << tokens[3] << std::endl;
+        std::cerr << "CSVReader::stringsToOBE: Malformed price! " << tokens[3] << std::endl;
         throw e;
     }
 
@@ -94,10 +95,41 @@ OrderBookEntry CSVReader::stringsToOBE(std::vector<std::string> tokens)
     }
     catch (const std::exception &e)
     {
-        std::cerr << "Malformed amount! " << tokens[3] << std::endl;
+        std::cerr << "CSVReader::stringsToOBE: Malformed amount! " << tokens[3] << std::endl;
         throw e;
     }
 
     OrderBookEntry obe{price, amount, tokens[0], tokens[1], OrderBookTypeUtil::stringToOrderBookType(tokens[2])};
+    return obe;
+}
+
+OrderBookEntry CSVReader::stringsToOBE(std::string priceString, std::string amountString, std::string timestamp, std::string product, OrderBookType orderType)
+{
+    double price;
+    try
+    {
+        price = std::stod(priceString);
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << "CSVReader::stringsToOBE: Bad price! " << priceString << std::endl;
+        throw;
+    }
+
+    double amount;
+    try
+    {
+        amount = std::stod(amountString);
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << "CSVReader::stringsToOBE: Bad amount! " << amountString << std::endl;
+        throw;
+    }
+
+    OrderBookEntry obe
+    {
+        price, amount, timestamp, product, orderType
+    };
     return obe;
 }
