@@ -7,9 +7,7 @@
 OrderBook::OrderBook(std::string filename)
 {
     orders = CSVReader::readCSV(filename);
-    std::sort(orders.begin(), orders.end(), [](const OrderBookEntry& e1, const OrderBookEntry& e2) {
-        return e1.timestamp < e2.timestamp;
-    });
+    std::sort(orders.begin(), orders.end(), OrderBookEntry::compareByTimestamp);
 }
 
 std::vector<std::string> OrderBook::getKnownProducts()
@@ -125,4 +123,10 @@ double OrderBook::getBidVolumeByPriceDeviation(std::vector<OrderBookEntry>& orde
         }
     }
     return volume;
+}
+
+void OrderBook::insertOrder(OrderBookEntry& order)
+{
+    orders.push_back(order);
+    std::sort(orders.begin(), orders.end(), OrderBookEntry::compareByTimestamp);
 }

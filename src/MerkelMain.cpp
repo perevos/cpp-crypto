@@ -43,7 +43,8 @@ int MerkelMain::getUserOption()
         std::cout << "You chose: " << userOption << std::endl;
         return userOption;
     }
-    catch (const std::exception& e) {
+    catch (const std::exception &e)
+    {
         return 0;
     }
 }
@@ -92,7 +93,11 @@ void MerkelMain::printMarketStats()
         std::vector<OrderBookEntry> bidEntries = orderBook.getOrders(OrderBookType::bid, p, currentTime);
         std::cout << "Bids seen: " << bidEntries.size() << std::endl;
         std::cout << "Best bid: " << OrderBook::getHighPrice(bidEntries) << std::endl;
-        std::cout << "0.1% bid depth: " << OrderBook::getBidVolumeByPriceDeviation(bidEntries, 0.001) << std::endl;
+        // std::cout << "0.1% bid depth: " << OrderBook::getBidVolumeByPriceDeviation(bidEntries, 0.001) << std::endl;
+
+        std::vector<OrderBookEntry> askEntries = orderBook.getOrders(OrderBookType::ask, p, currentTime);
+        std::cout << "Asks seen: " << askEntries.size() << std::endl;
+        std::cout << "Best ask: " << OrderBook::getLowPrice(askEntries) << std::endl;
     }
 }
 
@@ -100,7 +105,7 @@ void MerkelMain::enterAsk()
 {
     std::cout << "Make an ask - enter the amount: product, price, amount, e.g. ETH/BTC,200,0.5" << std::endl;
     std::string input;
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    //std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     std::getline(std::cin, input);
 
     std::vector<std::string> tokens = CSVReader::tokenise(input, ',');
@@ -118,6 +123,7 @@ void MerkelMain::enterAsk()
                 currentTime,
                 tokens[0],
                 OrderBookType::ask);
+            orderBook.insertOrder(obe);
         }
         catch (const std::exception &e)
         {

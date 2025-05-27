@@ -22,10 +22,13 @@ public:
      */
     std::string getNextTime(std::string timestamp);
 
+    void insertOrder(OrderBookEntry& order);
+
     /** return the price of the highest bid in the sent set */
     static double getHighPrice(std::vector<OrderBookEntry>& orders);
     /** return the price of the lowest bid in the sent set */
     static double getLowPrice(std::vector<OrderBookEntry>& orders);
+    /** return the total volume of bids within a specified percentage deviation from the highest bid price */
     static double getBidVolumeByPriceDeviation(std::vector<OrderBookEntry>& orders, double maxDeviationPercentage);
 
 private:

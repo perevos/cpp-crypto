@@ -12,4 +12,6 @@ public:
     std::string timestamp;
     std::string product;
     OrderBookType orderType;
+
+    static bool compareByTimestamp(OrderBookEntry &e1, OrderBookEntry &e2);
 };
