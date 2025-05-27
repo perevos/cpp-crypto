@@ -39,7 +39,7 @@ int MerkelMain::getUserOption()
     std::getline(std::cin, line);
     try
     {
-        int userOption = std::stod(line);
+        int userOption = std::stoi(line);
         std::cout << "You chose: " << userOption << std::endl;
         return userOption;
     }
@@ -105,13 +105,13 @@ void MerkelMain::enterAsk()
 {
     std::cout << "Make an ask - enter the amount: product, price, amount, e.g. ETH/BTC,200,0.5" << std::endl;
     std::string input;
-    //std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    // std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     std::getline(std::cin, input);
 
     std::vector<std::string> tokens = CSVReader::tokenise(input, ',');
     if (tokens.size() != 3)
     {
-        std::cout << "Bad input! " << input << std::endl;
+        std::cerr << "MerkelMain::enterAsk: Bad input! " << input << std::endl;
     }
     else
     {
@@ -129,14 +129,39 @@ void MerkelMain::enterAsk()
         {
             std::cout << "MerkelMain::enterAsk: Bad input! " << std::endl;
         }
+        std::cout << "Your ask order has been successfully added." << std::endl;
     }
-
-    std::cout << "You typed: " << input << std::endl;
 }
 
 void MerkelMain::enterBid()
 {
-    std::cout << "Make a bid - enter the amount" << std::endl;
+    std::cout << "Make a bid - enter the amount: product, price, amount, e.g. ETH/BTC,200,0.5" << std::endl;
+    std::string input;
+    std::getline(std::cin, input);
+
+    std::vector<std::string> tokens = CSVReader::tokenise(input, ',');
+    if (tokens.size() != 3)
+    {
+        std::cerr << "MerkelMain::enterBid:: Bad input! " << input << std::endl;
+    }
+    else
+    {
+        try
+        {
+            OrderBookEntry obe = CSVReader::stringsToOBE(
+                tokens[1],
+                tokens[2],
+                currentTime,
+                tokens[0],
+                OrderBookType::bid);
+            orderBook.insertOrder(obe);
+        }
+        catch (const std::exception &e)
+        {
+            std::cout << "MerkelMain::enterBid: Bad input! " << std::endl;
+        }
+        std::cout << "Your bid order has been successfully added." << std::endl;
+    }
 }
 
 void MerkelMain::printWallet()
