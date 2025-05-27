@@ -104,3 +104,25 @@ std::string OrderBook::getNextTime(std::string timestamp)
     }
     return next_timestamp;
 }
+
+/**
+ * Calculates the total volume of bids within a specified percentage deviation from the highest bid price.
+ * 
+ * Args:
+ *     - orders: a vector of OrderBookEntry objects representing the current bid orders.
+ *     - maxDeviationPercentage: the maximum allowed percentage deviation from the best bid (e.g., 0.001 for 0.1%). Orders outside this range are excluded.
+ * 
+ * Returns:
+ *     the cumulative volume (sum of 'amount' for relevant bids) within the specified price range.
+ */
+double OrderBook::getBidVolumeByPriceDeviation(std::vector<OrderBookEntry>& orders, double maxDeviationPercentage) {
+    double bestBidPrice = getHighPrice(orders);
+    double lowerBound = bestBidPrice * (1 - maxDeviationPercentage);
+    double volume = 0;
+    for (OrderBookEntry& e : orders) {
+        if (e.price >= lowerBound) {
+            volume += e.amount;
+        }
+    }
+    return volume;
+}

@@ -80,29 +80,11 @@ void MerkelMain::printMarketStats()
 {
     for (std::string const p : orderBook.getKnownProducts())
     {
-        std::cout << "Product: " << p << std::endl;
+        std::cout << std::endl << "Product: " << p << std::endl;
         std::vector<OrderBookEntry> bidEntries = orderBook.getOrders(OrderBookType::bid, p, currentTime);
-        double lowBid, highBid, lowAsk, highAsk;
-        if (!bidEntries.empty())
-        {
-            lowBid = OrderBook::getLowPrice(bidEntries);
-            highBid = OrderBook::getHighPrice(bidEntries);
-            std::cout << "Bids seen (" << bidEntries.size() << "): " << lowBid << " -- " << highBid << std::endl;
-        }
-
-        std::vector<OrderBookEntry> askEntries = orderBook.getOrders(OrderBookType::ask, p, currentTime);
-        if (!askEntries.empty())
-        {
-            lowAsk = OrderBook::getLowPrice(askEntries);
-            highAsk = OrderBook::getHighPrice(askEntries);
-            std::cout << "Asks seen (" << askEntries.size() << "): " << lowAsk << " -- " << highAsk << std::endl;
-        }
-
-        if (!bidEntries.empty() && !askEntries.empty())
-        {
-            double bidAskSpread = lowAsk - highBid;
-            std::cout << "Bid-ask spread: " << bidAskSpread << std::endl;
-        }
+        std::cout << "Bids seen: " << bidEntries.size() << std::endl;
+        std::cout << "Best bid: " << OrderBook::getHighPrice(bidEntries) << std::endl;
+        std::cout << "0.1% bid depth: " << OrderBook::getBidVolumeByPriceDeviation(bidEntries, 0.001) << std::endl;
     }
 }
 
