@@ -14,4 +14,6 @@ public:
     OrderBookType orderType;
 
     static bool compareByTimestamp(OrderBookEntry &e1, OrderBookEntry &e2);
+    static bool compareByPriceAsc(OrderBookEntry &e1, OrderBookEntry &e2);
+    static bool compareByPriceDesc(OrderBookEntry &e1, OrderBookEntry &e2);
 };
