@@ -34,6 +34,11 @@ bool Wallet::containsCurrency(std::string type, double amount) const
 
 std::string Wallet::toString() const
 {
+    if (currencies.empty())
+    {
+        return "<empty wallet>";
+    }
+
     std::string s;
     for (const std::pair<std::string, double> pair : currencies)
     {
@@ -85,4 +90,10 @@ bool Wallet::canFulfillBidOrder(const OrderBookEntry& order) const
 {
     std::vector<std::string> tokens = CSVReader::tokenise(order.product, '/');
     return containsCurrency(tokens[1], order.price * order.amount);
+}
+
+std::ostream& operator<<(std::ostream &os, Wallet& wallet)
+{
+    os << wallet.toString();
+    return os;
 }

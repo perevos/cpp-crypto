@@ -19,6 +19,7 @@ public:
     bool canFulfillOrder(const OrderBookEntry& order) const;
     /** generate a string representation of the wallet */
     std::string toString() const;
+    friend std::ostream& operator<<(std::ostream &os, Wallet& wallet);
 
 private:
     bool canFulfillBidOrder(const OrderBookEntry& order) const;
