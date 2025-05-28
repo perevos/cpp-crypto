@@ -1,4 +1,7 @@
+#include <iostream>
+
 #include "Wallet.h"
+#include "CSVReader.h"
 
 Wallet::Wallet()
 {
@@ -24,12 +27,12 @@ void Wallet::insertCurrency(std::string type, double amount)
     currencies[type] = balance;
 }
 
-bool Wallet::containsCurrency(std::string type, double amount)
+bool Wallet::containsCurrency(std::string type, double amount) const
 {
-    return currencies.count(type) != 0 && currencies[type] >= amount;
+    return currencies.count(type) != 0 && currencies.at(type) >= amount;
 }
 
-std::string Wallet::toString()
+std::string Wallet::toString() const
 {
     std::string s;
     for (const std::pair<std::string, double> pair : currencies)
@@ -57,4 +60,29 @@ bool Wallet::removeCurrency(std::string type, double amount)
         return true;
     }
     return false;
+}
+
+bool Wallet::canFulfillOrder(const OrderBookEntry& order) const
+{
+    switch (order.orderType)
+    {
+        case OrderBookType::ask:
+            return canFulfillAskOrder(order);
+        case OrderBookType::bid:
+            return canFulfillBidOrder(order);
+        default:
+            return false;
+    }
+}
+
+bool Wallet::canFulfillAskOrder(const OrderBookEntry& order) const
+{
+    std::vector<std::string> tokens = CSVReader::tokenise(order.product, '/');
+    return containsCurrency(tokens[0], order.amount);
+}
+
+bool Wallet::canFulfillBidOrder(const OrderBookEntry& order) const
+{
+    std::vector<std::string> tokens = CSVReader::tokenise(order.product, '/');
+    return containsCurrency(tokens[1], order.price * order.amount);
 }
