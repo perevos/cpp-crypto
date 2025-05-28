@@ -11,6 +11,10 @@ void MerkelMain::init()
 {
     int input;
     currentTime = orderBook.getEarliestTime();
+
+    // TODO: remove me
+    wallet.insertCurrency("BTC", 10);
+
     while (true)
     {
         printMenu();
@@ -123,7 +127,15 @@ void MerkelMain::enterAsk()
                 currentTime,
                 tokens[0],
                 OrderBookType::ask);
-            orderBook.insertOrder(obe);
+            if (wallet.canFulfillOrder(obe))
+            {
+                std::cout << "Wallet looks good. " << std::endl;
+                orderBook.insertOrder(obe);
+            }
+            else
+            {
+                std::cout << "Wallet has insufficient funds. " << std::endl;
+            }
         }
         catch (const std::exception &e)
         {
@@ -154,7 +166,15 @@ void MerkelMain::enterBid()
                 currentTime,
                 tokens[0],
                 OrderBookType::bid);
-            orderBook.insertOrder(obe);
+            if (wallet.canFulfillOrder(obe))
+            {
+                std::cout << "Wallet looks good. " << std::endl;
+                orderBook.insertOrder(obe);
+            }
+            else
+            {
+                std::cout << "Wallet has insufficient funds. " << std::endl;
+            }
         }
         catch (const std::exception &e)
         {
@@ -167,6 +187,7 @@ void MerkelMain::enterBid()
 void MerkelMain::printWallet()
 {
     std::cout << "Your wallet is empty." << std::endl;
+    std::cout << wallet.toString() << std::endl;
 }
 
 void MerkelMain::gotoNextTimeFrame()
@@ -174,7 +195,8 @@ void MerkelMain::gotoNextTimeFrame()
     std::cout << "Going to next time frame." << std::endl;
     std::vector<OrderBookEntry> sales = orderBook.matchAsksAndBids("ETH/BTC", currentTime);
     std::cout << "Sales: " << sales.size() << std::endl;
-    for (OrderBookEntry& sale : sales) {
+    for (OrderBookEntry &sale : sales)
+    {
         std::cout << "Sale price: " << sale.price << " amount " << sale.amount << std::endl;
     }
     currentTime = orderBook.getNextTime(currentTime);
